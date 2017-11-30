@@ -3,7 +3,8 @@
   "description": "Input addresses with ease.",
   "main": "elfy-address-input.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0"
+    "polymer": "Polymer/polymer#^2.0.0",
+    "paper-input-place": "mlisook/paper-input-place#^1.9.5"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",

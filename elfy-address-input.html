@@ -1,5 +1,7 @@
 <link rel="import" href="../polymer/polymer-element.html">
 
+<link rel="import" href="../paper-input-place/paper-input-place.html">
+
 <dom-module id="elfy-address-input">
   <template>
     <style>
@@ -7,7 +9,7 @@
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]!</h2>
+
   </template>
 
   <script>
@@ -20,11 +22,11 @@
      * @demo demo/index.html
      */
     class ElfyAddressInput extends Polymer.Element {
-      static get is() { return 'elfy-address-input'; }
-      static get properties() {
-        return {
-        };
-      }
+    	static get is() {return 'elfy-address-input';}
+    	static get properties() {
+    		return {
+    		};
+    	}
     }
 
     window.customElements.define(ElfyAddressInput.is, ElfyAddressInput);
