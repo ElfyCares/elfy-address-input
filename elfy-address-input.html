@@ -1,0 +1,32 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="elfy-address-input">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+  </template>
+
+  <script>
+    /**
+     * `elfy-address-input`
+     * Input addresses with ease.
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class ElfyAddressInput extends Polymer.Element {
+      static get is() { return 'elfy-address-input'; }
+      static get properties() {
+        return {
+        };
+      }
+    }
+
+    window.customElements.define(ElfyAddressInput.is, ElfyAddressInput);
+  </script>
+</dom-module>
