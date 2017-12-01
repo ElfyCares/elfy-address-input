@@ -89,38 +89,56 @@
     	static get is() {return 'elfy-address-input';}
     	static get properties() {
     		return {
+    			/**
+           * Your Google Maps JavaScript API key.
+           * Get it here https://console.developers.google.com/apis/library/maps-backend.googleapis.com
+           */
     			apiKey: {
     				type: String,
     			},
-
+    			/**
+           * The label of the search input
+           */
     			label: {
     				type: String,
     				value: 'Pick a place',
     			},
-
+    			/**
+           * The icon of the collapsed address inputs.
+           */
     			icon: {
     				type: String,
     				value: 'communication:business',
     			},
-
+    			/**
+           * Specify a country e.g NL to narrow down the address search.
+           */
     			searchCountryCode: {
     				type: String,
     			},
-
+    			/**
+           * True, if the address search is invalid.
+           */
     			searchInvalid: {
     				type: Boolean,
     			},
-
+    			/**
+           * A error message for the search input.
+           */
     			searchErrorMessage: {
     				type: String,
     			},
-
+    			/**
+           * The returned place object from google maps.
+           */
     			place: {
     				type: Object,
     				notify: true,
     				observer: '_placeChanged',
     			},
-
+    			/**
+           * The generated address object.
+           */
     			address: {
     				type: Object,
     				notify: true,
@@ -128,13 +146,26 @@
     					return {};
     				},
     			},
-
+    			/**
+           * True, if the address inputs should clear if the search input clears.
+           */
     			clearInputOnClearPlace: {
     				type: Boolean,
     			},
-
+    			/**
+           * True, if the address inputs should be collapsed if no place is selected.
+           */
     			collapse: {
     				type: Boolean,
+    			},
+    			/**
+           * A comma separated string of required inputs.
+           * e.g. required="street,streetNumber"
+           * would automatically set streetRequired and streetNumberRequired to true.
+           */
+    			required: {
+    				type: String,
+    				observer: '_requiredChanged',
     			},
 
     			streetRequired: {
@@ -161,7 +192,6 @@
     				type: Boolean,
     			},
     
-
     			placeholderStreet: {
     				type: String,
     				value: 'Street',
@@ -190,11 +220,6 @@
     			placeholderCountry: {
     				type: String,
     				value: 'Country',
-    			},
-
-    			required: {
-    				type: String,
-    				observer: '_requiredChanged',
     			},
     		};
     	}
