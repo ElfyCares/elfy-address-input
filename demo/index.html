@@ -25,7 +25,39 @@
           <elfy-address-input 
             api-key="AIzaSyAhZxTcdugRJlVv1kE3zxZwkKz174tjR7s"
             required="street,streetNumber,postalCode,state,country"
-            collapse clear-input-on-clear-place></elfy-address-input>
+            collapse clear-input-on-clear-place>
+          </elfy-address-input>
+        </template>
+      </demo-snippet>
+    </div>
+    <div class="vertical-section-container centered">
+      <h3>Additional input elfy-address-input demo</h3>
+      <demo-snippet>
+        <template>
+          <elfy-address-input 
+            api-key="AIzaSyAhZxTcdugRJlVv1kE3zxZwkKz174tjR7s"
+            required="street,streetNumber,postalCode,state,country"
+            collapse clear-input-on-clear-place>
+            <iron-input slot="prefix">
+                <input placeholder="lon" required style="padding: 3px; margin: 6px;">
+            </iron-input>
+            <iron-input slot="suffix">
+              <input placeholder="lat" required style="padding: 3px; margin: 6px;">
+            </iron-input>
+          </elfy-address-input>
+        </template>
+      </demo-snippet>
+    </div>
+    <div class="vertical-section-container centered">
+      <h3>Custom input elfy-address-input demo</h3>
+      <demo-snippet>
+        <template>
+          <elfy-address-input 
+            api-key="AIzaSyAhZxTcdugRJlVv1kE3zxZwkKz174tjR7s"
+            required="street,streetNumber,postalCode,state,country"
+            collapse clear-input-on-clear-place address="{{address}}">
+            <input slot="inputs" is="iron-input" bind-value="{{address.street}}">
+          </elfy-address-input>
         </template>
       </demo-snippet>
     </div>
