@@ -3,7 +3,7 @@
 
 # \<elfy-address-input\>
 
-Input addresses with ease and allow users to adjust the details.
+A Polymer 2 element which helps you to input addresses with ease and allows users to adjust the details.
 
 ## `address` property
 
