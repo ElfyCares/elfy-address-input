@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.org/ElfyCares/elfy-address-input.svg?branch=master)](https://travis-ci.org/FabricElements/skeleton-carousel)
+[![Build Status](https://travis-ci.org/ElfyCares/elfy-address-input.svg?branch=master)](https://travis-ci.org/ElfyCares/elfy-address-input)
 # \<elfy-address-input\>
 
-Input addresses with ease.
+Input addresses with ease and let users adjust the details.
 
 ## Install the Polymer-CLI
 

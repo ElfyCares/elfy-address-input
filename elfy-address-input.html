@@ -1,6 +1,5 @@
 <link rel="import" href="../polymer/polymer-element.html">
 
-<link rel="import" href="../iron-validator-behavior/iron-validator-behavior.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-icons/communication-icons.html">
@@ -81,11 +80,12 @@
      * `elfy-address-input`
      * Input addresses with ease.
      *
+     * @group ElfyElements
      * @customElement
      * @polymer
      * @demo demo/index.html
      */
-    class ElfyAddressInput extends Polymer.mixinBehaviors([Polymer.IronValidatorBehavior], Polymer.Element) {
+    class ElfyAddressInput extends Polymer.Element {
     	static get is() {return 'elfy-address-input';}
     	static get properties() {
     		return {
