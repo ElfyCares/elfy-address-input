@@ -16,15 +16,19 @@
 
       paper-input-place {
         width: 100%;
+        @apply --elfy-address-input-search;
       }
+
       input {
         padding: 3px;
         margin: 6px;
+        @apply --elfy-address-input-inputs;
       }
 
       iron-input[invalid] > input {
         border: 1px solid red;
         background-color: #FFCDD2;
+        @apply --elfy-address-input-inputs-invalid;
       }
     </style>
     <paper-input-place
@@ -33,18 +37,21 @@
       label="[[label]]"
       invalid="{{searchInvalid}}"
       error-message="[[searchErrorMessage]]"
+      hide-error="[[!showSearchError]]"
       search-country-code="[[searchCountryCode]]">
     </paper-input-place>
 
     <iron-collapse id="collapse">
-      <slot name="prefix"></slot>
-      <slot>
+      <slot name="inputs">
         <div class="layout horizontal">
             <div>
               <iron-icon icon="[[icon]]"></iron-icon>
             </div>
             <div>
-              <div class="container">
+              <div>
+                <slot name="prefix"></slot>
+              </div>
+              <div>
                 <iron-input bind-value="{{address.street::input}}" auto-validate>
                   <input placeholder="[[placeholderStreet]]" required="[[streetRequired]]">
                 </iron-input>
@@ -52,7 +59,7 @@
                   <input placeholder="[[placeholderStreetNumber]]" required="[[streetNumberRequired]]">
                 </iron-input>
               </div>
-              <div class="container">
+              <div>
                 <iron-input bind-value="{{address.postalCode::input}}" auto-validate>
                   <input placeholder="[[placeholderPostalCode]]" required="[[postalCodeRequired]]">
                 </iron-input>
@@ -60,7 +67,7 @@
                   <input placeholder="[[placeholderCity]]" required="[[cityRequired]]">
                 </iron-input>
               </div>
-              <div class="container">
+              <div>
                 <iron-input bind-value="{{address.state::input}}" auto-validate>
                   <input placeholder="[[placeholderState]]" required="[[stateRequired]]">
                 </iron-input>
@@ -68,10 +75,12 @@
                   <input placeholder="[[placeholderCountry]]" required="[[countryRequired]]">
                 </iron-input>
               </div>
+              <div>
+                <slot name="suffix"></slot>
+              </div>
             </div>
           </div>
       </slot>
-      <slot name="suffix"></slot>
     </iron-collapse>
   </template>
 
@@ -127,6 +136,13 @@
            */
     			searchErrorMessage: {
     				type: String,
+    			},
+    			/**
+           * If error message should be shown.
+           */
+    			showSearchError: {
+    				type: Boolean,
+    				value: false,
     			},
     			/**
            * The returned place object from google maps.
@@ -239,7 +255,6 @@
     		const hasType = (o, k) => {return o.types.indexOf(k) > -1;};
     		const address = place.basic;
     		const collapse = this.shadowRoot.querySelector('#collapse');
-    
     		if (!place || !place.placeDetails || !place.placeDetails.address_components) {
     			if (this.clearInputOnClearPlace) {
     				this.address = {};
