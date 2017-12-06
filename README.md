@@ -22,7 +22,12 @@ Input addresses with ease and allow users to adjust the details.
     "latLng": {
         "lat": 40.7829796,
         "lng": -73.95897059999999
-    }
+    },
+    "address_1": `${address.street} ${address.streetNumber || ''}`,
+    "address_2": `${address.postalCode || ''} ${address.state || ''}`,
+    "address_3": `${address.country || ''}`,
+    "address_full": `${address.address_1}, ${address.address_2}, ${address.address_3}`,
+    "address_short": `${address.address_1}, ${address.address_2}`
 }
 ```
 

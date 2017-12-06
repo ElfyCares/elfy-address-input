@@ -57,26 +57,26 @@
 							</div>
 							<div>
 								<iron-input bind-value="{{address.street}}" auto-validate>
-									<input placeholder="[[placeholderStreet]]" required="[[streetRequired]]">
+									<input placeholder="[[placeholderStreet]]" required="[[_streetRequired]]">
 								</iron-input>
 								<iron-input bind-value="{{address.streetNumber}}" auto-validate>
-									<input placeholder="[[placeholderStreetNumber]]" required="[[streetNumberRequired]]">
+									<input placeholder="[[placeholderStreetNumber]]" required="[[_streetNumberRequired]]">
 								</iron-input>
 							</div>
 							<div>
 								<iron-input bind-value="{{address.postalCode}}" auto-validate>
-									<input placeholder="[[placeholderPostalCode]]" required="[[postalCodeRequired]]">
+									<input placeholder="[[placeholderPostalCode]]" required="[[_postalCodeRequired]]">
 								</iron-input>
 								<iron-input bind-value="{{address.city}}" auto-validate>
-									<input placeholder="[[placeholderCity]]" required="[[cityRequired]]">
+									<input placeholder="[[placeholderCity]]" required="[[_cityRequired]]">
 								</iron-input>
 							</div>
 							<div>
 								<iron-input bind-value="{{address.state}}" auto-validate>
-									<input placeholder="[[placeholderState]]" required="[[stateRequired]]">
+									<input placeholder="[[placeholderState]]" required="[[_stateRequired]]">
 								</iron-input>
 								<iron-input bind-value="{{address.country}}" auto-validate>
-									<input placeholder="[[placeholderCountry]]" required="[[countryRequired]]">
+									<input placeholder="[[placeholderCountry]]" required="[[_countryRequired]]">
 								</iron-input>
 							</div>
 							<div>
@@ -85,11 +85,11 @@
 							<div>
 								<slot name="save">
 										<paper-button
+											hidden$="[[hideSave]]"
 											slot="save"
 											class="save-btn"
 											disabled="[[!valid]]"
-											on-tap="_fire"
-											data-event="save-tapped"
+											on-tap="_saveTapped"
 											raised>[[saveLabel]]
 										</paper-button>
 								</slot>
@@ -186,19 +186,15 @@
 						observer: '_addressChanged',
 					},
 					/**
-					 * True, if the address inputs should clear if the search input clears.
-					 */
-					clearInputOnClearPlace: {
-						type: Boolean,
-					},
-					/**
 					 * True, if the address inputs should be collapsed if no place is selected.
 					 */
 					collapse: {
 						type: Boolean,
 						observer: '_collapseChanged',
 					},
-
+					/**
+					 * True, if the address object is valid.
+					 */
 					valid: {
 						type: Boolean,
 					},
@@ -211,28 +207,10 @@
 						type: String,
 						observer: '_requiredChanged',
 					},
-
-					streetRequired: {
-						type: Boolean,
-					},
-		
-					streetNumberRequired: {
-						type: Boolean,
-					},
-		
-					postalCodeRequired: {
-						type: Boolean,
-					},
-		
-					cityRequired: {
-						type: Boolean,
-					},
-		
-					stateRequired: {
-						type: Boolean,
-					},
-		
-					countryRequired: {
+					/**
+					 * True, if save button shoul be hidden.
+					 */
+					hideSave: {
 						type: Boolean,
 					},
 		
@@ -281,6 +259,30 @@
 							};
 						},
 					},
+
+					_streetRequired: {
+						type: Boolean,
+					},
+		
+					_streetNumberRequired: {
+						type: Boolean,
+					},
+		
+					_postalCodeRequired: {
+						type: Boolean,
+					},
+		
+					_cityRequired: {
+						type: Boolean,
+					},
+		
+					_stateRequired: {
+						type: Boolean,
+					},
+		
+					_countryRequired: {
+						type: Boolean,
+					},
 				};
 			}
 
@@ -300,22 +302,26 @@
 				this.address = {};
 			}
 
+			hideInputs() {
+				this.shadowRoot.querySelector('#collapse').hide();
+			}
+
+			showInputs() {
+				this.shadowRoot.querySelector('#collapse').show();
+			}
+
 			_collapseChanged(collapse) {
 				if (!collapse) {
-					this.shadowRoot.querySelector('#collapse').show();
+					this.showInputs();
 				}
 			}
 
-			_fire(e, detail) {
-				if (typeof e === 'string') {
-					this.dispatchEvent(new CustomEvent(e, {detail: detail}));
-					return;
-				}
-				this.dispatchEvent(new CustomEvent(e.target.dataset.event, {detail: e.target.dataset.detail}));
+			_saveTapped() {
+				this.dispatchEvent(new Event('save-tapped'));
 			}
 
 			_addressChanged(address) {
-				if (!address && this.clearInputOnClearPlace) {
+				if (!address) {
 					this.clearPlace();
 					return;
 				}
@@ -337,7 +343,7 @@
 				}
 				if (this.validate()) {
 					this.valid = true;
-					this._fire('address-valid', {address: this.address});
+					this.dispatchEvent(new CustomEvent('address-valid', {address: this.address}));
 					return;
 				}
 				this.valid = false;
@@ -346,29 +352,26 @@
 			_requiredChanged(r, o) {
 				if (o) {
 					const arrOld = o.split(',');
-					arrOld.forEach(a => this[`${a}Required`] = false);
+					arrOld.forEach(a => this[`_${a}Required`] = false);
 				}
 				if (r) {
 					const arr = r.split(',');
-					arr.forEach(a => this[`${a}Required`] = true);
+					arr.forEach(a => this[`_${a}Required`] = true);
 				}
 			}
 
 			_placeChanged(placeChange) {
 				const place = placeChange.base;
 				const hasType = (o, k) => {return o.types.indexOf(k) > -1;};
-				const collapse = this.shadowRoot.querySelector('#collapse');
 				if (!place || !place.placeDetails || !place.placeDetails.address_components) {
-					if (this.clearInputOnClearPlace) {
-						this.clearAddress();
-						if (this.collapse) {
-							collapse.hide();
-						}
+					if (this.collapse) {
+						this.hideInputs();
 					}
+					this.clearAddress();
 					return;
 				}
 				if (this.collapse) {
-					collapse.show();
+					this.showInputs();
 				}
 				const address = place.basic;
 				address.latLng = place.latLng;
