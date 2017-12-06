@@ -5,289 +5,397 @@
 <link rel="import" href="../iron-icons/communication-icons.html">
 <link rel="import" href="../iron-collapse/iron-collapse.html">
 
+<link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-input-place/paper-input-place.html">
 
 <dom-module id="elfy-address-input">
-  <template>
-    <style include="iron-flex">
-      :host {
-        display: block;
-      }
+	<template>
+		<style include="iron-flex">
+			:host {
+				display: block;
+			}
 
-      paper-input-place {
-        width: 100%;
-        @apply --elfy-address-input-search;
-      }
+			paper-input-place {
+				width: 100%;
+				@apply --elfy-address-input-search;
+			}
 
-      input {
-        padding: 3px;
-        margin: 6px;
-        @apply --elfy-address-input-inputs;
-      }
+			input {
+				padding: 3px;
+				margin: 6px;
+				@apply --elfy-address-input-inputs;
+			}
 
-      iron-input[invalid] > input {
-        border: 1px solid red;
-        background-color: #FFCDD2;
-        @apply --elfy-address-input-inputs-invalid;
-      }
-    </style>
-    <paper-input-place
-      api-key="[[apiKey]]"
-      place="{{place}}" 
-      label="[[label]]"
-      invalid="{{searchInvalid}}"
-      error-message="[[searchErrorMessage]]"
-      hide-error="[[!showSearchError]]"
-      search-country-code="[[searchCountryCode]]">
-    </paper-input-place>
+			iron-input[invalid] > input {
+				border: 1px solid red;
+				background-color: #FFCDD2;
+				@apply --elfy-address-input-inputs-invalid;
+			}
+			.save-btn {
+				@apply --elfy-address-input-save-button;
+			}
+		</style>
+		<paper-input-place
+			api-key="[[apiKey]]"
+			place="{{place}}"
+			label="[[label]]"
+			invalid="{{searchInvalid}}"
+			error-message="[[searchErrorMessage]]"
+			hide-error="[[!showSearchError]]"
+			search-country-code="[[searchCountryCode]]">
+		</paper-input-place>
 
-    <iron-collapse id="collapse">
-      <slot name="inputs">
-        <div class="layout horizontal">
-            <div>
-              <iron-icon icon="[[icon]]"></iron-icon>
-            </div>
-            <div>
-              <div>
-                <slot name="prefix"></slot>
-              </div>
-              <div>
-                <iron-input bind-value="{{address.street::input}}" auto-validate>
-                  <input placeholder="[[placeholderStreet]]" required="[[streetRequired]]">
-                </iron-input>
-                <iron-input bind-value="{{address.streetNumber::input}}" auto-validate>
-                  <input placeholder="[[placeholderStreetNumber]]" required="[[streetNumberRequired]]">
-                </iron-input>
-              </div>
-              <div>
-                <iron-input bind-value="{{address.postalCode::input}}" auto-validate>
-                  <input placeholder="[[placeholderPostalCode]]" required="[[postalCodeRequired]]">
-                </iron-input>
-                <iron-input bind-value="{{address.city::input}}" auto-validate>
-                  <input placeholder="[[placeholderCity]]" required="[[cityRequired]]">
-                </iron-input>
-              </div>
-              <div>
-                <iron-input bind-value="{{address.state::input}}" auto-validate>
-                  <input placeholder="[[placeholderState]]" required="[[stateRequired]]">
-                </iron-input>
-                <iron-input bind-value="{{address.country::input}}" auto-validate>
-                  <input placeholder="[[placeholderCountry]]" required="[[countryRequired]]">
-                </iron-input>
-              </div>
-              <div>
-                <slot name="suffix"></slot>
-              </div>
-            </div>
-          </div>
-      </slot>
-    </iron-collapse>
-  </template>
+		<iron-collapse id="collapse">
+			<slot name="inputs">
+				<div class="layout horizontal">
+						<div>
+							<iron-icon icon="[[icon]]"></iron-icon>
+						</div>
+						<div>
+							<div>
+								<slot name="prefix"></slot>
+							</div>
+							<div>
+								<iron-input bind-value="{{address.street}}" auto-validate>
+									<input placeholder="[[placeholderStreet]]" required="[[_streetRequired]]">
+								</iron-input>
+								<iron-input bind-value="{{address.streetNumber}}" auto-validate>
+									<input placeholder="[[placeholderStreetNumber]]" required="[[_streetNumberRequired]]">
+								</iron-input>
+							</div>
+							<div>
+								<iron-input bind-value="{{address.postalCode}}" auto-validate>
+									<input placeholder="[[placeholderPostalCode]]" required="[[_postalCodeRequired]]">
+								</iron-input>
+								<iron-input bind-value="{{address.city}}" auto-validate>
+									<input placeholder="[[placeholderCity]]" required="[[_cityRequired]]">
+								</iron-input>
+							</div>
+							<div>
+								<iron-input bind-value="{{address.state}}" auto-validate>
+									<input placeholder="[[placeholderState]]" required="[[_stateRequired]]">
+								</iron-input>
+								<iron-input bind-value="{{address.country}}" auto-validate>
+									<input placeholder="[[placeholderCountry]]" required="[[_countryRequired]]">
+								</iron-input>
+							</div>
+							<div>
+								<slot name="suffix"></slot>
+							</div>
+							<div>
+								<slot name="save">
+										<paper-button
+											hidden$="[[hideSave]]"
+											slot="save"
+											class="save-btn"
+											disabled="[[!valid]]"
+											on-tap="_saveTapped"
+											raised>[[saveLabel]]
+										</paper-button>
+								</slot>
+							</div>
+						</div>
+					</div>
+			</slot>
+		</iron-collapse>
+	</template>
 
-  <script>
-    /**
-     * `elfy-address-input`
-     * Input addresses with ease.
-     *
-     * @group ElfyElements
-     * @customElement
-     * @polymer
-     * @demo demo/index.html
-     */
-    class ElfyAddressInput extends Polymer.Element {
-    	static get is() {return 'elfy-address-input';}
-    	static get properties() {
-    		return {
-    			/**
-           * Your Google Maps JavaScript API key.
-           * Get it here https://console.developers.google.com/apis/library/maps-backend.googleapis.com
-           */
-    			apiKey: {
-    				type: String,
-    			},
-    			/**
-           * The label of the search input
-           */
-    			label: {
-    				type: String,
-    				value: 'Pick a place',
-    			},
-    			/**
-           * The icon of the collapsed address inputs.
-           */
-    			icon: {
-    				type: String,
-    				value: 'communication:business',
-    			},
-    			/**
-           * Specify a country e.g NL to narrow down the address search.
-           */
-    			searchCountryCode: {
-    				type: String,
-    			},
-    			/**
-           * True, if the address search is invalid.
-           */
-    			searchInvalid: {
-    				type: Boolean,
-    			},
-    			/**
-           * A error message for the search input.
-           */
-    			searchErrorMessage: {
-    				type: String,
-    			},
-    			/**
-           * If error message should be shown.
-           */
-    			showSearchError: {
-    				type: Boolean,
-    				value: false,
-    			},
-    			/**
-           * The returned place object from google maps.
-           */
-    			place: {
-    				type: Object,
-    				notify: true,
-    				observer: '_placeChanged',
-    			},
-    			/**
-           * The generated address object.
-           */
-    			address: {
-    				type: Object,
-    				notify: true,
-    				value() {
-    					return {};
-    				},
-    			},
-    			/**
-           * True, if the address inputs should clear if the search input clears.
-           */
-    			clearInputOnClearPlace: {
-    				type: Boolean,
-    			},
-    			/**
-           * True, if the address inputs should be collapsed if no place is selected.
-           */
-    			collapse: {
-    				type: Boolean,
-    			},
-    			/**
-           * A comma separated string of required inputs.
-           * e.g. required="street,streetNumber"
-           * would automatically set streetRequired and streetNumberRequired to true.
-           */
-    			required: {
-    				type: String,
-    				observer: '_requiredChanged',
-    			},
+	<script>
+		/**
+		 * `elfy-address-input`
+		 * Input addresses with ease.
+		 *
+		 * @group ElfyElements
+		 * @customElement
+		 * @polymer
+		 * @demo demo/index.html
+		 */
+		class ElfyAddressInput extends Polymer.Element {
+			static get is() {return 'elfy-address-input';}
+			static get properties() {
+				return {
+					/**
+					 * Your Google Maps JavaScript API key.
+					 * Get it here https://console.developers.google.com/apis/library/maps-backend.googleapis.com
+					 */
+					apiKey: {
+						type: String,
+					},
+					/**
+					 * The label of the search input
+					 */
+					label: {
+						type: String,
+						value: 'Pick a place',
+					},
+					/**
+					 * The label of the save button
+					 */
+					saveLabel: {
+						type: String,
+						value: 'save',
+					},
+					/**
+					 * The icon of the collapsed address inputs.
+					 */
+					icon: {
+						type: String,
+						value: 'communication:business',
+					},
+					/**
+					 * Specify a country e.g NL to narrow down the address search.
+					 */
+					searchCountryCode: {
+						type: String,
+					},
+					/**
+					 * True, if the address search is invalid.
+					 */
+					searchInvalid: {
+						type: Boolean,
+					},
+					/**
+					 * A error message for the search input.
+					 */
+					searchErrorMessage: {
+						type: String,
+					},
+					/**
+					 * If error message should be shown.
+					 */
+					showSearchError: {
+						type: Boolean,
+						value: false,
+					},
+					/**
+					 * The returned place object from google maps.
+					 */
+					place: {
+						type: Object,
+						notify: true,
+					},
+					/**
+					 * The generated address object.
+					 */
+					address: {
+						type: Object,
+						notify: true,
+						value() {
+							return {};
+						},
+						observer: '_addressChanged',
+					},
+					/**
+					 * True, if the address inputs should be collapsed if no place is selected.
+					 */
+					collapse: {
+						type: Boolean,
+						observer: '_collapseChanged',
+					},
+					/**
+					 * True, if the address object is valid.
+					 */
+					valid: {
+						type: Boolean,
+					},
+					/**
+					 * A comma separated string of required inputs.
+					 * e.g. required="street,streetNumber"
+					 * would automatically set streetRequired and streetNumberRequired to true.
+					 */
+					required: {
+						type: String,
+						observer: '_requiredChanged',
+					},
+					/**
+					 * True, if save button shoul be hidden.
+					 */
+					hideSave: {
+						type: Boolean,
+					},
+		
+					placeholderStreet: {
+						type: String,
+						value: 'Street',
+					},
 
-    			streetRequired: {
-    				type: Boolean,
-    			},
-    
-    			streetNumberRequired: {
-    				type: Boolean,
-    			},
-    
-    			postalCodeRequired: {
-    				type: Boolean,
-    			},
-    
-    			cityRequired: {
-    				type: Boolean,
-    			},
-    
-    			stateRequired: {
-    				type: Boolean,
-    			},
-    
-    			countryRequired: {
-    				type: Boolean,
-    			},
-    
-    			placeholderStreet: {
-    				type: String,
-    				value: 'Street',
-    			},
+					placeholderStreetNumber: {
+						type: String,
+						value: 'Number',
+					},
 
-    			placeholderStreetNumber: {
-    				type: String,
-    				value: 'Number',
-    			},
+					placeholderPostalCode: {
+						type: String,
+						value: 'Postal Code',
+					},
 
-    			placeholderPostalCode: {
-    				type: String,
-    				value: 'Postal Code',
-    			},
+					placeholderCity: {
+						type: String,
+						value: 'City',
+					},
 
-    			placeholderCity: {
-    				type: String,
-    				value: 'City',
-    			},
+					placeholderState: {
+						type: String,
+						value: 'State',
+					},
 
-    			placeholderState: {
-    				type: String,
-    				value: 'State',
-    			},
+					placeholderCountry: {
+						type: String,
+						value: 'Country',
+					},
+					/**
+					 * Validation function for address object.
+					 */
+					validate: {
+						type: Function,
+						value() {
+							return () => {
+								if (!this.required) {
+									return true;
+								}
+								return this.required.split(',').every(reqStr => {
+									return this.address[reqStr];
+								});
+							};
+						},
+					},
 
-    			placeholderCountry: {
-    				type: String,
-    				value: 'Country',
-    			},
-    		};
-    	}
+					_streetRequired: {
+						type: Boolean,
+					},
+		
+					_streetNumberRequired: {
+						type: Boolean,
+					},
+		
+					_postalCodeRequired: {
+						type: Boolean,
+					},
+		
+					_cityRequired: {
+						type: Boolean,
+					},
+		
+					_stateRequired: {
+						type: Boolean,
+					},
+		
+					_countryRequired: {
+						type: Boolean,
+					},
+				};
+			}
 
-    	_requiredChanged(r, o) {
-    		if (o) {
-    			const arrOld = o.split(',');
-    			arrOld.forEach(a => this[`${a}Required`] = false);
-    		}
-    		if (r) {
-    			const arr = r.split(',');
-    			arr.forEach(a => this[`${a}Required`] = true);
-    		}
-    	}
+			static get observers() {
+				return [
+					'_validateAddress(address.*)',
+					'_placeChanged(place.*)',
+				];
+			}
 
-    	_placeChanged(place) {
-    		const hasType = (o, k) => {return o.types.indexOf(k) > -1;};
-    		const address = place.basic;
-    		const collapse = this.shadowRoot.querySelector('#collapse');
-    		if (!place || !place.placeDetails || !place.placeDetails.address_components) {
-    			if (this.clearInputOnClearPlace) {
-    				this.address = {};
-    				collapse.hide();
-    			}
-    			return;
-    		}
-    		if (this.collapse) {
-    			collapse.show();
-    		}
+			clearPlace() {
+				this.place = null;
+				this.shadowRoot.querySelector('paper-input-place').value = '';
+			}
 
-    		address.latLng = place.latLng;
-    
-    		const addressComponents = place.placeDetails.address_components;
-    		addressComponents.forEach(a => {
-    			if (hasType(a, 'route')) {
-    				address.street = a.long_name;
-    				return;
-    			}
-    			if (hasType(a, 'street_number')) {
-    				address.streetNumber = a.long_name;
-    				return;
-    			}
-    			if (hasType(a, 'postal_code')) {
-    				address.postalCode = a.long_name;
-    				return;
-    			}
-    		});
+			clearAddress() {
+				this.address = {};
+			}
 
-    		this.set('address', address);
-    	}
-    }
+			hideInputs() {
+				this.shadowRoot.querySelector('#collapse').hide();
+			}
 
-    window.customElements.define(ElfyAddressInput.is, ElfyAddressInput);
-  </script>
+			showInputs() {
+				this.shadowRoot.querySelector('#collapse').show();
+			}
+
+			_collapseChanged(collapse) {
+				if (!collapse) {
+					this.showInputs();
+				}
+			}
+
+			_saveTapped() {
+				this.dispatchEvent(new Event('save-tapped'));
+			}
+
+			_addressChanged(address) {
+				if (!address) {
+					this.clearPlace();
+					return;
+				}
+			}
+
+			_setAddressComputedComponents(address) {
+				address.address_1 = `${address.street} ${address.streetNumber || ''}`;
+				address.address_2 = `${address.postalCode || ''} ${address.state || ''}`;
+				address.address_3 = `${address.country || ''}`;
+				address.address_full = `${address.address_1}, ${address.address_2}, ${address.address_3}`;
+				address.address_short = `${address.address_1}, ${address.address_2}`;
+			}
+
+			_validateAddress(addressChange) {
+				const address = addressChange.base;
+				this._setAddressComputedComponents(address);
+				if (!address || Object.keys(address).length === 0) {
+					return;
+				}
+				if (this.validate()) {
+					this.valid = true;
+					this.dispatchEvent(new CustomEvent('address-valid', {address: this.address}));
+					return;
+				}
+				this.valid = false;
+			}
+
+			_requiredChanged(r, o) {
+				if (o) {
+					const arrOld = o.split(',');
+					arrOld.forEach(a => this[`_${a}Required`] = false);
+				}
+				if (r) {
+					const arr = r.split(',');
+					arr.forEach(a => this[`_${a}Required`] = true);
+				}
+			}
+
+			_placeChanged(placeChange) {
+				const place = placeChange.base;
+				const hasType = (o, k) => {return o.types.indexOf(k) > -1;};
+				if (!place || !place.placeDetails || !place.placeDetails.address_components) {
+					if (this.collapse) {
+						this.hideInputs();
+					}
+					this.clearAddress();
+					return;
+				}
+				if (this.collapse) {
+					this.showInputs();
+				}
+				const address = place.basic;
+				address.latLng = place.latLng;
+		
+				const addressComponents = place.placeDetails.address_components;
+				addressComponents.forEach(a => {
+					if (hasType(a, 'route')) {
+						address.street = a.long_name;
+						return;
+					}
+					if (hasType(a, 'street_number')) {
+						address.streetNumber = a.long_name;
+						return;
+					}
+					if (hasType(a, 'postal_code')) {
+						address.postalCode = a.long_name;
+						return;
+					}
+				});
+
+				this.set('address', address);
+			}
+		}
+
+		window.customElements.define(ElfyAddressInput.is, ElfyAddressInput);
+	</script>
 </dom-module>
