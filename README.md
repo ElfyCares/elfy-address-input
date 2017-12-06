@@ -5,6 +5,13 @@
 
 Input addresses with ease and allow users to adjust the details.
 
+## Editable and customoizable via `<slot></slot>`
+![alt text](https://raw.githubusercontent.com/ElfyCares/elfy-address-input/master/demo/demo1.png)
+
+## Address autocomplete
+
+![alt text](https://raw.githubusercontent.com/ElfyCares/elfy-address-input/master/demo/demo2.png)
+
 ## `address` property
 
 ```
