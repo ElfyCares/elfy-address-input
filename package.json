@@ -16,8 +16,8 @@
 	"scripts": {
 		"start": "polymer serve -o",
 		"postinstall": "polymer install",
-		"lint": "eslint --cache --ext .js,.html . && polymer lint elfy-*.html --ignore-path .gitignore",
-		"lint:javascript": "eslint . --ext js,html --ignore-path .gitignore",
+		"lint": "npm run lint:javascript && polymer lint",
+    	"lint:javascript": "eslint . --ext js,html --ignore-path .gitignore",
 		"test": "polymer test"
 	},
 	"repository": {
