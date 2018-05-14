@@ -1,5 +1,6 @@
 {
   "name": "elfy-address-input",
+  "varsion": "1.0.1",
   "description": "Input addresses with ease.",
   "main": "elfy-address-input.html",
   "dependencies": {

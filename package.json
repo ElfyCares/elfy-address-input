@@ -1,6 +1,6 @@
 {
-	"name": "",
-	"version": "1.0.0",
+	"name": "elfy-address-input",
+	"version": "1.0.1",
 	"description": "[![Build Status](https://travis-ci.org/ElfyCares/elfy-address-input.svg?branch=master)](https://travis-ci.org/ElfyCares/elfy-address-input)",
 	"main": "index.html",
 	"directories": {
@@ -16,7 +16,8 @@
 	"scripts": {
 		"start": "polymer serve -o",
 		"postinstall": "polymer install",
-		"lint": "eslint --cache --ext .js,.html . && polymer lint elfy-*.html",
+		"lint": "eslint --cache --ext .js,.html . && polymer lint elfy-*.html --ignore-path .gitignore",
+		"lint:javascript": "eslint . --ext js,html --ignore-path .gitignore",
 		"test": "polymer test"
 	},
 	"repository": {
