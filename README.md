@@ -5,7 +5,7 @@
 
 A Polymer 2 element which helps you to input addresses with ease and allows users to adjust the details.
 
-## Editable and customoizable via `<slot></slot>`
+## Editable and customizable via `<slot></slot>`
 ![alt text](https://raw.githubusercontent.com/ElfyCares/elfy-address-input/master/demo/demo1.png)
 
 ## Address autocomplete
